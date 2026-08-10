@@ -32,12 +32,12 @@
     transform: scale(0.9);
 }
 
-/* Иконка не должна наследовать шрифт темы, иначе глиф пропадает */
-#nw-outfit-btn i {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome";
-    font-weight: 900;
-    font-style: normal;
-    line-height: 1;
+/* SVG вместо иконочного шрифта: не зависит от font-family темы */
+#nw-outfit-btn .nw-op-icon {
+    display: block;
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
     pointer-events: none;
 }
 
@@ -287,9 +287,13 @@ body.nw-op-dragging {
 
 @media (max-width: 760px) {
     #nw-outfit-btn {
-        width: 44px !important;
-        height: 44px !important;
-        font-size: 17px !important;
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    #nw-outfit-btn .nw-op-icon {
+        width: 17px !important;
+        height: 17px !important;
     }
 
     #nw-outfit-panel {
