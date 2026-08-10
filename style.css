@@ -32,6 +32,15 @@
     transform: scale(0.9);
 }
 
+/* Иконка не должна наследовать шрифт темы, иначе глиф пропадает */
+#nw-outfit-btn i {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome";
+    font-weight: 900;
+    font-style: normal;
+    line-height: 1;
+    pointer-events: none;
+}
+
 /* ============ ПАНЕЛЬ ============ */
 
 #nw-outfit-panel {
@@ -278,9 +287,9 @@ body.nw-op-dragging {
 
 @media (max-width: 760px) {
     #nw-outfit-btn {
-        width: 52px !important;
-        height: 52px !important;
-        font-size: 20px !important;
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 17px !important;
     }
 
     #nw-outfit-panel {
