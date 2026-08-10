@@ -386,7 +386,7 @@
         head.className = 'inline-drawer-toggle inline-drawer-header nw-op-set-head';
 
         const title = document.createElement('b');
-        title.textContent = 'Наряды Mooxsy';
+        title.textContent = 'Наряды';
 
         const icon = document.createElement('div');
         icon.className = 'inline-drawer-icon fa-solid fa-circle-chevron-down down';
