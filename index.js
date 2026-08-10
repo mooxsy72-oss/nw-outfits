@@ -22,7 +22,7 @@
     }
 
     // состояние сайта внутри окна: { hash, search, scroll, tag, more }
-    let siteState = lsGet(LS_STATE) || { hash: '', search: '', scroll: 0, tag: '', more: 0 };
+    let siteState = lsGet(LS_STATE) || { filter: 'all', gender: 'all', count: 40, scroll: 0 };
 
     function buildSrc() {
         return SITE_URL + (siteState.search || '') + (siteState.hash || '');
@@ -43,7 +43,10 @@
     const btn = document.createElement('div');
     btn.id = BTN_ID;
     btn.title = 'Наряды';
-    btn.innerHTML = '<i class="fa-solid fa-shirt"></i>';
+    btn.innerHTML = '<svg class="nw-op-icon" viewBox="0 0 24 24" aria-hidden="true">'
+                  + '<path d="M9 2 L4 4.5 L2.4 9.2 L5 10.2 L5 22 L19 22 L19 10.2 '
+                  + 'L21.6 9.2 L20 4.5 L15 2 C15 3.66 13.66 5 12 5 C10.34 5 9 3.66 9 2 Z"/>'
+                  + '</svg>';
     document.body.appendChild(btn);
 
     // восстановление позиции кнопки
@@ -129,16 +132,15 @@
         let loaded = false;
         frame.addEventListener('load', () => {
             loaded = true;
-            if (siteState.scroll || siteState.tag || siteState.more) {
-                try {
-                    frame.contentWindow.postMessage({
-                        nwOutfitsRestore: true,
-                        scroll: siteState.scroll,
-                        tag:    siteState.tag,
-                        more:   siteState.more
-                    }, SITE_ORIGIN);
-                } catch (err) { /* пофиг */ }
-            }
+            try {
+                frame.contentWindow.postMessage({
+                    nwOutfitsRestore: true,
+                    filter: siteState.filter,
+                    gender: siteState.gender,
+                    count:  siteState.count,
+                    scroll: siteState.scroll
+                }, SITE_ORIGIN);
+            } catch (err) { /* пофиг */ }
         });
         setTimeout(() => {
             if (!loaded) panel.classList.add('nw-op-blocked');
@@ -312,11 +314,10 @@
         if (!d || d.nwOutfits !== true) return;
 
         siteState = {
-            hash:   typeof d.hash   === 'string' ? d.hash   : '',
-            search: typeof d.search === 'string' ? d.search : '',
-            scroll: typeof d.scroll === 'number' ? d.scroll : 0,
-            tag:    typeof d.tag    === 'string' ? d.tag    : '',
-            more:   typeof d.more   === 'number' ? d.more   : 0
+            filter: typeof d.filter === 'string' ? d.filter : 'all',
+            gender: typeof d.gender === 'string' ? d.gender : 'all',
+            count:  typeof d.count  === 'number' ? d.count  : 40,
+            scroll: typeof d.scroll === 'number' ? d.scroll : 0
         };
         lsSet(LS_STATE, siteState);
     });
