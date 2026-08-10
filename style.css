@@ -1,0 +1,328 @@
+/* ============ ПЛАВАЮЩАЯ КНОПКА ============ */
+
+#nw-outfit-btn {
+    position: fixed;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--SmartThemeBodyColor, #e8e8e8);
+    background: color-mix(in srgb, var(--SmartThemeBlurTintColor, #1c1c22) 82%, transparent);
+    border: 1px solid color-mix(in srgb, var(--SmartThemeBorderColor, #444) 70%, transparent);
+    border-radius: 50%;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(10px);
+    cursor: grab;
+    z-index: 99998;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.16s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+#nw-outfit-btn:hover {
+    background: color-mix(in srgb, var(--SmartThemeQuoteColor, #6f8fff) 26%, var(--SmartThemeBlurTintColor, #1c1c22));
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+#nw-outfit-btn.nw-press {
+    transform: scale(0.9);
+}
+
+/* ============ ПАНЕЛЬ ============ */
+
+#nw-outfit-panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 420px;
+    height: 560px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--SmartThemeBlurTintColor, #16161b);
+    border: 1px solid color-mix(in srgb, var(--SmartThemeBorderColor, #444) 80%, transparent);
+    border-radius: 14px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(14px);
+    z-index: 99999;
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+#nw-outfit-panel.nw-op-open {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nw-op-head {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    background: color-mix(in srgb, var(--SmartThemeQuoteColor, #6f8fff) 12%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--SmartThemeBorderColor, #444) 60%, transparent);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.nw-op-head:active {
+    cursor: grabbing;
+}
+
+.nw-op-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--SmartThemeBodyColor, #e8e8e8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nw-op-title i {
+    margin-right: 6px;
+    opacity: 0.8;
+}
+
+.nw-op-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nw-op-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+    color: var(--SmartThemeBodyColor, #e8e8e8);
+    border-radius: 8px;
+    cursor: pointer;
+    opacity: 0.72;
+    transition: opacity 0.15s ease, background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nw-op-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.nw-op-close:hover {
+    background: rgba(220, 70, 70, 0.28);
+}
+
+.nw-op-body {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    background: #fff;
+}
+
+.nw-op-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #fff;
+}
+
+.nw-op-fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--SmartThemeBodyColor, #e8e8e8);
+    background: var(--SmartThemeBlurTintColor, #16161b);
+}
+
+.nw-op-fallback a {
+    color: var(--SmartThemeQuoteColor, #6f8fff);
+    text-decoration: underline;
+}
+
+#nw-outfit-panel.nw-op-blocked .nw-op-fallback {
+    display: flex;
+}
+
+.nw-op-resize {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    cursor: nwse-resize;
+    touch-action: none;
+    background:
+        linear-gradient(135deg, transparent 50%, color-mix(in srgb, var(--SmartThemeBorderColor, #777) 90%, transparent) 50%);
+    border-bottom-right-radius: 14px;
+    z-index: 2;
+}
+
+/* во время drag/resize iframe не должен воровать события */
+body.nw-op-dragging .nw-op-frame {
+    pointer-events: none;
+}
+
+body.nw-op-dragging {
+    user-select: none;
+    -webkit-user-select: none;
+}
+/* ============ БЛОК НАСТРОЕК В ПАНЕЛИ РАСШИРЕНИЙ ============ */
+/* Оформление берётся из темы через родные классы inline-drawer.
+   Здесь только состояние раскрытия и мелкая типографика. */
+
+#nw-outfit-btn.nw-op-hidden {
+    display: none !important;
+}
+
+/* Плавное раскрытие: grid-строка едет 0fr → 1fr,
+   высоту считать не нужно, дёргаться нечему. */
+#nw-op-settings > .inline-drawer-content {
+    display: grid !important;
+    grid-template-rows: 0fr;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    opacity: 0.35;
+    transition: grid-template-rows 0.26s ease, opacity 0.2s ease;
+}
+
+#nw-op-settings.nw-op-set-open > .inline-drawer-content {
+    grid-template-rows: 1fr;
+    opacity: 1;
+}
+
+.nw-op-set-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 6px;
+}
+
+#nw-op-settings .inline-drawer-icon {
+    transition: transform 0.24s ease;
+}
+
+#nw-op-settings.nw-op-set-open .inline-drawer-icon {
+    transform: rotate(180deg);
+}
+
+#nw-op-settings > .nw-op-set-head {
+    cursor: pointer;
+}
+
+/* Страховка: если тема не задала фон заголовку,
+   берём цвета из переменных, а не хардкодим. */
+#nw-op-settings > .nw-op-set-head b {
+    font-size: 1em;
+    line-height: 1.35;
+}
+
+#nw-op-settings .checkbox_label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 2px 0 0;
+    font-size: 0.92em;
+    cursor: pointer;
+}
+
+.nw-op-set-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nw-op-set-row .menu_button {
+    flex: 1 1 130px;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.85em;
+    line-height: 1.3;
+    padding: 6px 10px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nw-op-set-hint {
+    font-size: 0.75em;
+    line-height: 1.45;
+    opacity: 0.6;
+}
+
+/* ============ МОБИЛКА ============ */
+/* Никаких translate, только пиксели от JS. Тут только габариты и запрет ресайза. */
+
+@media (max-width: 760px) {
+    #nw-outfit-btn {
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 20px !important;
+    }
+
+    #nw-outfit-panel {
+        position: fixed !important;
+        transform: none !important;
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        z-index: 99999 !important;
+    }
+
+    #nw-outfit-panel.nw-op-open {
+        transform: none !important;
+    }
+
+    .nw-op-resize {
+        display: none !important;
+    }
+
+    .nw-op-btn {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 15px !important;
+    }
+
+    .nw-op-body {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+.nw-op-warn {
+    display: none;
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    font-size: 11.5px;
+    line-height: 1.35;
+    color: #ffe1a8;
+    background: rgba(190, 120, 20, 0.22);
+    border-bottom: 1px solid rgba(220, 160, 60, 0.35);
+}
+
+#nw-outfit-panel.nw-op-insecure .nw-op-warn {
+    display: block;
+}
