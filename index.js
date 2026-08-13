@@ -116,7 +116,10 @@
         panel.querySelector('.nw-op-ext').addEventListener('click', () => window.open(buildSrc(), '_blank'));
         panel.querySelector('.nw-op-reload').addEventListener('click', () => {
             frame.src = 'about:blank';
-            setTimeout(() => { frame.src = buildSrc(); }, 50);
+            setTimeout(() => {
+                armBlockTimer();
+                frame.src = buildSrc();
+            }, 50);
         });
 
         // двойной клик по шапке — сброс позиции и размера
@@ -130,8 +133,22 @@
 
         // если iframe заблокирован — покажем фолбэк
         let loaded = false;
+        let blockTimer = null;
+
+        function armBlockTimer() {
+            loaded = false;
+            panel.classList.remove('nw-op-blocked');
+            if (blockTimer) clearTimeout(blockTimer);
+            blockTimer = setTimeout(() => {
+                if (!loaded) panel.classList.add('nw-op-blocked');
+            }, 15000);
+        }
+
         frame.addEventListener('load', () => {
+            if (frame.getAttribute('src') === 'about:blank') return;
             loaded = true;
+            if (blockTimer) clearTimeout(blockTimer);
+            panel.classList.remove('nw-op-blocked');
             try {
                 frame.contentWindow.postMessage({
                     nwOutfitsRestore: true,
@@ -142,9 +159,8 @@
                 }, SITE_ORIGIN);
             } catch (err) { /* пофиг */ }
         });
-        setTimeout(() => {
-            if (!loaded) panel.classList.add('nw-op-blocked');
-        }, 4000);
+
+        armBlockTimer();
 
         makeDraggable(panel, panel.querySelector('.nw-op-head'));
         makeResizable(panel, panel.querySelector('.nw-op-resize'));
