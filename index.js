@@ -474,7 +474,6 @@
         cb.addEventListener('change', () => applyEnabled(cb.checked));
 
         openBtn.addEventListener('click', () => {
-            if (!enabled) { cb.checked = true; applyEnabled(true); }
             openPanel(window.innerWidth / 2, window.innerHeight / 2);
         });
 
